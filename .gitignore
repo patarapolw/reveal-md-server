@@ -13,3 +13,5 @@ node_modules/
 # js/reveal.min.js
 
 /dist/
+reveal.config.json
+.env

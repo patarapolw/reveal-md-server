@@ -41,8 +41,6 @@
         markdownSections.appendChild(section);
     });
 
-    console.log(markdownSections);
-
     // More info about config & dependencies:
     // - https://github.com/hakimel/reveal.js#configuration
     // - https://github.com/hakimel/reveal.js#dependencies
