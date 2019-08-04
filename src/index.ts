@@ -1,4 +1,4 @@
-import matter from "gray-matter";
+import { GrayMatterFile } from "gray-matter";
 
 (async () => {
     let mdUrl;
@@ -13,7 +13,16 @@ import matter from "gray-matter";
         }
     }
 
-    const computedMd = matter(await (await fetch(mdUrl)).text());
+    const computedMd: GrayMatterFile<any> = await (await fetch("/fetch", {
+        method: "POST",
+        body: JSON.stringify({
+            url: mdUrl
+        }),
+        headers: {
+            'Content-Type': 'application/json',
+            // 'Content-Type': 'application/x-www-form-urlencoded',
+        }
+    })).json();
     
     if (computedMd.data.theme) {
         (document.getElementById("theme") as HTMLLinkElement).href = `css/theme/${computedMd.data.theme}.css`;
@@ -63,9 +72,7 @@ import matter from "gray-matter";
             { src: 'plugin/markdown/marked.js' },
             { src: 'plugin/markdown/markdown.js' },
             { src: 'plugin/notes/notes.js', async: true },
-            { src: 'plugin/highlight/highlight.js', async: true, callback() {
-                hljs.initHighlightingOnLoad();
-            } }
+            { src: 'plugin/highlight/highlight.js', async: true }
         ]
     });
 })().catch(console.error);
