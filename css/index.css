@@ -1,0 +1,4 @@
+.slides {
+    overflow: scroll !important;
+    pointer-events: auto !important;
+}
