@@ -11,7 +11,7 @@
     "reveal:build": "grunt",
     "js:serve": "webpack -w --config webpack.dev.js",
     "js:build": "webpack --config webpack.prod.js",
-    "build": "npm run reveal:build && npm run js:build"
+    "build": "npm run js:build"
   },
   "author": {
     "name": "Pacharapol Withayasakpunt",
