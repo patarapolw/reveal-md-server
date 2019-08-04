@@ -11,7 +11,7 @@ Opinionated branch of [Reveal-md](https://github.com/patarapolw/reveal-md)
 
 This allows you to view markdown files online as a presentation in Reveal.js
 
-To use this, go to `https://reveal-md.herokuapp.com/#<YOUR_URL_HERE>`
+To use this, go to `https://reveal-md.herokuapp.com/<YOUR_URL_HERE>`
 
 ---
 

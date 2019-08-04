@@ -1,26 +1,27 @@
 const express = require("express");
-const bodyPaser = require("body-parser");
 const fetch = require("node-fetch");
-const path = require("path");
 const matter = require("gray-matter");
+const fs = require("fs");
 
 const app = express();
 
-app.use("/css", express.static("css"));
-app.use("/js", express.static("js"));
+app.use(express.static("public"));
 app.use("/dist", express.static("dist"));
-app.use("/plugin", express.static("plugin"));
-app.use("/lib", express.static("lib"));
+app.set("view engine", "ejs");
 
-app.use(bodyPaser.json());
-app.post("/fetch", async (req, res, next) => {
+app.get("/*", async (req, res, next) => {
     try {
-        return res.json(matter(await (await fetch(req.body.url)).text()));
-    } catch (e) { next(e) }
-});
+        const url = req.params[0] || req.params.q;
+        if (!url || url.startsWith("http")) {
+            const md = url ? await (await fetch(url)).text() : fs.readFileSync("README.md");
 
-app.get("/", (req, res) => {
-    return res.sendFile(path.resolve("index.html"))
+            return res.render("index", {
+                computedMd: matter(md)
+            });
+        }
+
+        next();
+    } catch (e) { next(e) }
 });
 
 const port = process.env.PORT || 8000;

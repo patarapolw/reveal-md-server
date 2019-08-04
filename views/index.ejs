@@ -6,10 +6,10 @@
 
 		<title>Reveal MD</title>
 
-		<link rel="stylesheet" href="css/reset.css">
-		<link rel="stylesheet" href="css/reveal.min.css">
-		<link rel="stylesheet" href="css/theme/white.css" id="theme">
-		<link rel="stylesheet" href="css/index.css">
+		<link rel="stylesheet" href="/css/reset.css">
+		<link rel="stylesheet" href="/css/reveal.min.css">
+		<link rel="stylesheet" href="/css/theme/white.css" id="theme">
+		<link rel="stylesheet" href="/css/index.css">
 
 		<!-- Theme used for syntax highlighting of code -->
 		<link rel="stylesheet" href="lib/css/monokai.css" id="highlightTheme">
@@ -29,7 +29,10 @@
 			</div>
 		</div>
 
-		<script src="js/reveal.min.js"></script>
-		<script src="dist/index.min.js"></script>
+		<script src="/js/reveal.min.js"></script>
+		<script>
+		var computedMd = <%- JSON.stringify(computedMd) %>;
+		</script>
+		<script src="/dist/index.min.js"></script>
 	</body>
 </html>
