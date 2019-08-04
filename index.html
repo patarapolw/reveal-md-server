@@ -4,15 +4,15 @@
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 
-		<title>reveal.js</title>
+		<title>Reveal MD</title>
 
 		<link rel="stylesheet" href="css/reset.css">
 		<link rel="stylesheet" href="css/reveal.css">
-		<link rel="stylesheet" href="css/theme/white.css">
+		<link rel="stylesheet" href="css/theme/white.css" id="theme">
 		<link rel="stylesheet" href="css/index.css">
 
 		<!-- Theme used for syntax highlighting of code -->
-		<link rel="stylesheet" href="lib/css/monokai.css">
+		<link rel="stylesheet" href="lib/css/monokai.css" id="highlightTheme">
 
 		<!-- Printing and PDF exports -->
 		<script>
@@ -25,15 +25,11 @@
 	</head>
 	<body>
 		<div class="reveal">
-			<div class="slides">
-				<section id="markdown-ext"
-					data-separator="---"
-         			data-separator-vertical="^--$"
-				></section>
+			<div class="slides" id="markdownSections">
 			</div>
 		</div>
 
 		<script src="js/reveal.js"></script>
-		<script src="js/index.js"></script>
+		<script src="dist/index.min.js"></script>
 	</body>
 </html>

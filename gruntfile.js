@@ -105,8 +105,6 @@ module.exports = grunt => {
 				options: {
 					port: port,
 					base: root,
-					livereload: true,
-					open: true,
 					useAvailablePort: true
 				}
 			}
@@ -154,9 +152,6 @@ module.exports = grunt => {
 			},
 			markdown: {
 				files: root.map(path => path + '/*.md')
-			},
-			options: {
-				livereload: true
 			}
 		}
 
@@ -181,7 +176,8 @@ module.exports = grunt => {
 	grunt.registerTask( 'package', [ 'default', 'zip' ] );
 
 	// Serve presentation locally
-	grunt.registerTask( 'serve', [ 'connect', 'watch' ] );
+	grunt.registerTask( 'serve', [ 'connect' ] );
+	// grunt.registerTask( 'serve', [ 'connect', 'watch' ] );
 
 	// Run tests
 	grunt.registerTask( 'test', [ 'jshint', 'qunit' ] );
