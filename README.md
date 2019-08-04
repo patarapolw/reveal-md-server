@@ -67,7 +67,7 @@ FILENAME=<PATH_TO_FILENAME>
 
 ---
 
-Overriding the YAML front matter by creating `reveal.config.json` containing the config.
+Overriding the YAML front matter by creating `reveal.config.json` containing the [config](https://github.com/hakimel/reveal.js/#configuration). In addition, `theme` and `highlightTheme` can also be edited.
 
 ---
 
