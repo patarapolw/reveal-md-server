@@ -5,6 +5,7 @@ import fs from "fs";
 import dotenv from "dotenv";
 import path from "path";
 import { contentToHtml } from "./lib/parser";
+import shortid from "shortid";
 
 dotenv.config();
 let config = {};
@@ -18,6 +19,8 @@ const app = express();
 app.use(express.static("public"));
 app.use("/dist", express.static("dist"));
 app.set("view engine", "ejs");
+
+const data: Record<string, any> = {};
 
 app.get("/*", async (req, res, next) => {
     try {
@@ -37,12 +40,19 @@ app.get("/*", async (req, res, next) => {
 
             (m as any).content = contentToHtml(m.content, path.extname(filename) as any);
 
-            return res.render("index", {m});
+            const id = shortid.generate();
+            data[id] = m;
+
+            return res.render("index", {id});
         }
 
         next();
     } catch (e) { next(e) }
 });
+
+app.post("/:id", (req, res) => {
+    return res.json(data[req.params.id]);
+})
 
 const port = process.env.PORT || 8000;
 

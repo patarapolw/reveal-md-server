@@ -1,5 +1,5 @@
 (async () => {
-    const computedMd = (window as any).computedMd;
+    const computedMd = await (await fetch(`/${(window as any).id}`, {method: "POST"})).json();
 
     if (computedMd.data.theme) {
         (document.getElementById("theme") as HTMLLinkElement).href = `/css/theme/${computedMd.data.theme}.css`;

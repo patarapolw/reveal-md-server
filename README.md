@@ -22,6 +22,8 @@ You can also edit in Visual Studio Code using <https://marketplace.visualstudio.
 ---
 
 //pug
+:settings
+    .element: class="fragment" data-fragment-index="2"
 :markdown
     ### Update (2019-08-16)
 
