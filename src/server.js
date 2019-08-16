@@ -18,7 +18,7 @@ app.set("view engine", "ejs");
 
 app.get("/*", async (req, res, next) => {
     try {
-        const url = req.params[0] || req.params.q;
+        const url = req.params[0] || req.query.q;
         if (!url || url.startsWith("http")) {
             const md = url ? await (await fetch(url)).text() : fs.readFileSync(process.env.FILENAME || "README.md");
             const m = matter(md);
