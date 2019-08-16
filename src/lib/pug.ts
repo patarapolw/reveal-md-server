@@ -9,7 +9,11 @@ export function compilePug(s: string, data?: any) {
   const pugOptions = {
     filters: {
       settings(text: string) {
-        return h("script", {type: "text/template", innerHTML: text.split("\n").map((x) => x.trim()).filter((x) => x).map((x) => `<!-- ${x} -->`).join("\n")}).outerHTML;
+        return h("script", {type: "text/template", innerHTML: text.split("\n")
+        .map((x) => x.trim())
+        .filter((x) => x)
+        .map((x) => `<!-- ${x} -->`)
+        .join("\n")}).outerHTML;
       },
       markdown(text: string) {
         return h(`#${id}`, {innerHTML: md.md2html(text)}).outerHTML;
