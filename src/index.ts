@@ -9,33 +9,21 @@
         (document.getElementById("highlightTheme") as HTMLLinkElement).href = `/lib/css/${computedMd.data.highlightTheme}.css`;
     }
 
-    let slides = (computedMd.content as string).split(/^---$/gm);
+    let slideGroups = computedMd.content as string[][];
     const markdownSections = document.getElementById("markdownSections") as HTMLDivElement;
 
-    slides.forEach((slide) => {
+    slideGroups.forEach((slides) => {
         const section = document.createElement("section");
-        const secs = slide.split(/^--$/gm);
         
-        if (secs.length > 1) {
-            secs.forEach((sec) => {
+        if (slides.length > 1) {
+            slides.forEach((s) => {
                 const subSection = document.createElement("section");
-                subSection.setAttribute("data-markdown", "");
-
-                const script = document.createElement("script");
-                script.setAttribute("type", "text/template");
-                script.innerHTML = sec;
-
-                subSection.append(script);
+                subSection.setAttribute("data-transition", "slide");
+                subSection.innerHTML = s;
                 section.append(subSection);
             });
         } else {
-            section.setAttribute("data-markdown", "");
-
-            const script = document.createElement("script");
-            script.setAttribute("type", "text/template");
-            script.innerHTML = slide;
-
-            section.appendChild(script);
+            section.innerHTML = slides[0];
         }
 
         markdownSections.appendChild(section);

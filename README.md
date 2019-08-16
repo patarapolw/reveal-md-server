@@ -21,22 +21,52 @@ You can also edit in Visual Studio Code using <https://marketplace.visualstudio.
 
 ---
 
+//pug
+:markdown
+    ### Update (2019-08-16)
+
+    - Custom markdown
+        - Tables and image resize with [Showdown.js](https://github.com/showdownjs/showdown), also, GitHub flavor.
+        - Clone the project to use your own!
+    - [Pug](https://pugjs.org) with [SCSS](https://sass-lang.com/) and custom markdown support
+    - HTML conversion is now done at server-side
+:scss
+    li li {
+        font-size: 0.8em;
+    }
+
+---
+
 ### Tips
 
-- You can edit the CSS using the inline CSS, for example
+- You can edit the (scoped) SCSS using Pug, for example,
 
-```html
-<style>img { max-height: 500px !important; }</style>
-<style>li { font-size: 30px; }</style>
+```pug
+//pug
+:markdown
+    ### Update (2019-08-16)
+
+    - Custom markdown
+        - Tables and image resize with [Showdown.js](https://github.com/showdownjs/showdown), also, GitHub flavor.
+        - Clone the project to use your own!
+    - [Pug](https://pugjs.org) with [SCSS](https://sass-lang.com/) and custom markdown support
+    - HTML conversion is now done at server-side
+:scss
+    li li {
+        font-size: 0.8em;
+    }
 ```
 
 ---
 
-To make the result local, try
+To make the result global, try
 
-```html
-<!-- .slide: class="slideName" -->
-<style>.slideName img { max-height: 500px !important; }</style>
+```pug
+//pug
+style.
+    .present {
+        background-color: gray;
+    }
 ```
 
 ---
@@ -61,7 +91,7 @@ There will be more options to customize, including "running local files", "overr
 
 Overriding the local file by creating an `.env` file containing,
 
-```
+```dotenv
 FILENAME=<PATH_TO_FILENAME>
 ```
 
@@ -81,4 +111,4 @@ Shuffle the slides by adding this to `reveal.config.json`
 
 ---
 
-Please support by giving a star on [GitHub](https://github.com/patarapolw/reveal-md-server) or requesting features at <https://github.com/patarapolw/reveal-md-server/issues>
+Please support by giving a ⭐ on [GitHub](https://github.com/patarapolw/reveal-md-server) or requesting features at <https://github.com/patarapolw/reveal-md-server/issues>

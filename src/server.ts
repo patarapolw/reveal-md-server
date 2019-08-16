@@ -1,8 +1,11 @@
-const express = require("express");
-const fetch = require("node-fetch");
-const matter = require("gray-matter");
-const fs = require("fs");
-const dotenv = require("dotenv");
+import express from "express";
+import fetch from "node-fetch";
+import matter from "gray-matter";
+import fs from "fs";
+import dotenv from "dotenv";
+import path from "path";
+import { contentToHtml } from "./lib/parser";
+
 dotenv.config();
 let config = {};
 
@@ -20,6 +23,7 @@ app.get("/*", async (req, res, next) => {
     try {
         const url = req.params[0] || req.query.q;
         if (!url || url.startsWith("http")) {
+            const filename = url || process.env.FILENAME || "README.md";
             const md = url ? await (await fetch(url)).text() : fs.readFileSync(process.env.FILENAME || "README.md");
             const m = matter(md);
             m.data = {
@@ -27,9 +31,13 @@ app.get("/*", async (req, res, next) => {
                 ...m.data
             };
 
-            return res.render("index", {
-                computedMd: m
-            });
+            if (filename === "README.md") {
+                m.data.shuffle = false;
+            }
+
+            (m as any).content = contentToHtml(m.content, path.extname(filename) as any);
+
+            return res.render("index", {m});
         }
 
         next();

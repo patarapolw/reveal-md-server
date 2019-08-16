@@ -3,11 +3,12 @@
   "version": "1.0.0",
   "description": "Markdown to Reveal.js presentation server",
   "homepage": "https://reveal-md.herokuapp.com",
-  "main": "src/server.js",
+  "main": "build/server.js",
   "scripts": {
-    "start": "node .",
+    "start": "node -r esm .",
     "dev": "webpack -w --config webpack.dev.js",
-    "build": "webpack --config webpack.prod.js"
+    "build": "tsc && webpack --config webpack.prod.js",
+    "tsc": "tsc"
   },
   "author": {
     "name": "Pacharapol Withayasakpunt",
@@ -22,17 +23,30 @@
     "node": ">=9.0.0"
   },
   "dependencies": {
+    "@types/dotenv": "^6.1.1",
     "@types/express": "^4.17.0",
+    "@types/hyperscript": "0.0.3",
+    "@types/node-fetch": "^2.5.0",
+    "@types/node-sass": "^4.11.0",
+    "@types/pug": "^2.0.4",
+    "@types/shortid": "0.0.29",
+    "@types/showdown": "^1.9.3",
     "css-loader": "^3.1.0",
     "dotenv": "^8.0.0",
     "ejs": "^2.6.2",
+    "esm": "^3.2.25",
     "express": "^4.16.2",
     "file-loader": "^4.1.0",
     "gray-matter": "^4.0.2",
+    "hyperscript": "^2.0.2",
     "node-fetch": "^2.6.0",
     "node-sass": "^4.11.0",
+    "pug": "^2.0.4",
+    "shortid": "^2.2.14",
+    "showdown": "^1.9.0",
     "style-loader": "^0.23.1",
     "ts-loader": "^6.0.4",
+    "ts-node": "^8.3.0",
     "typescript": "^3.5.3"
   },
   "license": "MIT",
