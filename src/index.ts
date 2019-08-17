@@ -9,7 +9,7 @@
         (document.getElementById("highlightTheme") as HTMLLinkElement).href = `/lib/css/${computedMd.data.highlightTheme}.css`;
     }
 
-    let slideGroups = computedMd.content as string[][];
+    let slideGroups = computedMd.slides as string[][];
     const markdownSections = document.getElementById("markdownSections") as HTMLDivElement;
 
     slideGroups.forEach((slides) => {

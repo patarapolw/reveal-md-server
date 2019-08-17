@@ -20,28 +20,30 @@ app.use(express.static("public"));
 app.use("/dist", express.static("dist"));
 app.set("view engine", "ejs");
 
-const data: Record<string, any> = {};
+const allData: Record<string, any> = {};
 
 app.get("/*", async (req, res, next) => {
     try {
         const url = req.params[0] || req.query.q;
         if (!url || url.startsWith("http")) {
             const filename = url || process.env.FILENAME || "README.md";
-            const md = url ? await (await fetch(url)).text() : fs.readFileSync(process.env.FILENAME || "README.md");
+            const md = url ? await (await fetch(url)).text()
+            : fs.readFileSync(process.env.FILENAME || "README.md", "utf8");
+
             const m = matter(md);
-            m.data = {
+            const data = {
                 ...config,
                 ...m.data
-            };
+            } as any;
 
             if (filename === "README.md") {
-                m.data.shuffle = false;
+                data.shuffle = false;
             }
 
-            (m as any).content = contentToHtml(m.content, path.extname(filename) as any);
+            const slides = contentToHtml(m.content, path.extname(filename) as any);
 
             const id = shortid.generate();
-            data[id] = m;
+            allData[id] = {data, slides};
 
             return res.render("index", {id});
         }
@@ -51,7 +53,7 @@ app.get("/*", async (req, res, next) => {
 });
 
 app.post("/:id", (req, res) => {
-    return res.json(data[req.params.id]);
+    return res.json(allData[req.params.id]);
 })
 
 const port = process.env.PORT || 8000;
