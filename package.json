@@ -20,7 +20,8 @@
     "url": "git://github.com/patarapolw/reveal-md-server.git"
   },
   "engines": {
-    "node": ">=9.0.0"
+    "node": "^10.16.0",
+    "npm": "^6.10.0"
   },
   "dependencies": {
     "@types/dotenv": "^6.1.1",

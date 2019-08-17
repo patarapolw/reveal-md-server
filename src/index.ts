@@ -1,6 +1,36 @@
 (async () => {
     const computedMd = await (await fetch(`/${(window as any).id}`, {method: "POST"})).json();
 
+    const headTag = document.getElementsByTagName("head")[0];
+    const bodyTag = document.getElementsByTagName("body")[0];
+
+    let {css, js} = computedMd.data;
+    if (css) {
+        if (!Array.isArray(css)) {
+            css = [css];
+        }
+
+        for (const c of css) {
+            const link = document.createElement("link");
+            link.rel = "stylesheet";
+            link.type = "text/css";
+            link.href = c;
+            headTag.append(link);
+        }
+    }
+
+    if (js) {
+        if (!Array.isArray(js)) {
+            js = [js];
+        }
+
+        for (const j of js) {
+            const script = document.createElement("script");
+            script.src = j;
+            bodyTag.append(script);
+        }
+    }
+
     if (computedMd.data.theme) {
         (document.getElementById("theme") as HTMLLinkElement).href = `/css/theme/${computedMd.data.theme}.css`;
     }
