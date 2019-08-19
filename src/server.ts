@@ -6,6 +6,7 @@ import dotenv from "dotenv";
 import path from "path";
 import { contentToHtml } from "./lib/parser";
 import shortid from "shortid";
+import { URL } from "url";
 
 dotenv.config();
 let config = {};
@@ -27,8 +28,8 @@ app.get("/*", async (req, res, next) => {
         const url = req.params[0] || req.query.q;
         if (!url || url.startsWith("http")) {
             const filename = url || process.env.FILENAME || "README.md";
-            const md = url ? await (await fetch(url)).text()
-            : fs.readFileSync(process.env.FILENAME || "README.md", "utf8");
+            const md = isUrl(filename) ? await (await fetch(new URL(filename).href)).text()
+            : fs.readFileSync(filename, "utf8");
 
             const m = matter(md);
             const data = {
@@ -52,6 +53,7 @@ app.get("/*", async (req, res, next) => {
         next();
     } catch (e) {
         res.status(500);
+        console.error(e);
         return res.json({ error: e });
     }
 });
@@ -65,3 +67,8 @@ const port = process.env.PORT || 8000;
 app.listen(port, () => {
     console.log(`Server running at http://localhost:${port}`);
 })
+
+const isUrl = (s: string) => {
+    try { return Boolean(new URL(s)); }
+    catch(e){ return false; }
+}
