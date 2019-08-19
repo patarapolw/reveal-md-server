@@ -50,7 +50,10 @@ app.get("/*", async (req, res, next) => {
         }
 
         next();
-    } catch (e) { next(e) }
+    } catch (e) {
+        res.status(500);
+        return res.json({ error: e });
+    }
 });
 
 app.post("/:id", (req, res) => {
