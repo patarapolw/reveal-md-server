@@ -32,6 +32,7 @@ app.get("/*", async (req, res, next) => {
 
             const m = matter(md);
             const data = {
+                title: filename,
                 ...config,
                 ...m.data
             } as any;

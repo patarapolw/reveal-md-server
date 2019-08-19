@@ -1,10 +1,16 @@
 (async () => {
     const computedMd = await (await fetch(`/${(window as any).id}`, {method: "POST"})).json();
 
+    const titleTag = document.getElementsByTagName("title")[0];
     const headTag = document.getElementsByTagName("head")[0];
     const bodyTag = document.getElementsByTagName("body")[0];
 
-    let {css, js} = computedMd.data;
+    let {title, css, js} = computedMd.data;
+
+    if (title) {
+        titleTag.innerText = title;
+    }
+
     if (css) {
         if (!Array.isArray(css)) {
             css = [css];
