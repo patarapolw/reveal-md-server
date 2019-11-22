@@ -1,3 +1,5 @@
+**Deprecated. Please use <https://github.com/patarapolw/reveal-md>**
+
 ---
 theme : "beige"
 transition: "zoom"
