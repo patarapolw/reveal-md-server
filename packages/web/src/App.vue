@@ -1,6 +1,6 @@
 <template lang="pug">
 #App
-  b-loading(active v-if="isLoading")
+  div(v-if="loadingInstance")
   component(v-else-if="layout" :is="layout")
     router-view
   router-view(v-else)
@@ -8,10 +8,17 @@
 
 <script lang="ts">
 import { Vue, Component, Watch } from 'vue-property-decorator'
+import { Loading } from 'element-ui'
+import { ElLoadingComponent } from 'element-ui/types/loading'
+
+import firebase from 'firebase/app'
+import 'firebase/auth'
 
 @Component
 export default class App extends Vue {
-  isLoading = true
+  loadingInstance: ElLoadingComponent | null = process.env.NODE_ENV === 'development'
+    ? Loading.service({})
+    : null
 
   get user () {
     return this.$store.state.user
@@ -23,30 +30,32 @@ export default class App extends Vue {
   }
 
   created () {
-    this.onUserChange()
+    if (process.env.NODE_ENV === 'development') {
+      this.onUserChange()
+
+      if (!localStorage.getItem('firebaseui::rememberedAccounts') && process.env.NODE_ENV === 'development') {
+        const provider = new firebase.auth.GoogleAuthProvider()
+        firebase.auth().signInWithPopup(provider)
+      }
+    }
   }
 
   @Watch('user')
   onUserChange () {
     if (!this.user) {
       setTimeout(() => {
-        this.isLoading = false
+        if (this.loadingInstance) {
+          this.loadingInstance.close()
+        }
+        this.loadingInstance = null
       }, 3000)
     } else {
-      this.isLoading = false
-    }
-    this.onLoadingChange()
-  }
-
-  @Watch('isLoading')
-  onLoadingChange () {
-    if (!this.isLoading) {
-      if (!this.user) {
-        this.$router.push('/')
-      } else if (this.$route.path === '/') {
-        this.$router.push('/lesson')
+      if (this.loadingInstance) {
+        this.loadingInstance.close()
       }
+      this.loadingInstance = null
     }
+    // this.onLoadingChange()
   }
 }
 </script>

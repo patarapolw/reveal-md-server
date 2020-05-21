@@ -1,5 +1,5 @@
 <template lang="pug">
-#Reveal
+#Reveal(style="width: 100vw; height: 100vh;")
   #global(style="display: none;")
   .reveal
     .slides
@@ -22,12 +22,22 @@ export default class Reveal extends Vue {
     return normalizeArray(this.$route.query.id)
   }
 
+  get slug () {
+    return this.$route.params.slug
+  }
+
   async mounted () {
     if (this.id) {
       const r = await firebase.firestore().collection('reveal').doc(this.id).get()
       const { raw } = r.data() || {}
       if (raw) {
         this.placeholder = raw
+      }
+    } else if (this.slug) {
+      const r = await firebase.firestore().collection('reveal').where('slug', '==', this.slug).limit(1).get()
+      const d = r.docs[0]
+      if (d) {
+        this.placeholder = d.data().raw || ''
       }
     }
 

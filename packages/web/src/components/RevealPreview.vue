@@ -35,7 +35,7 @@ export default class RevealPreview extends Vue {
       query: {
         id: this.id
       }
-    })
+    }).href
   }
 
   @Watch('markdown')

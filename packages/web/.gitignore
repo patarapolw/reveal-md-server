@@ -22,6 +22,9 @@ yarn-error.log*
 
 firebase.*
 firebase*
-.firebaserc
+.firebase*
 firestore*
 storage.rules
+
+# Local Netlify folder
+.netlify

@@ -3,128 +3,104 @@
   el-menu(mode="horizontal" style="display: flex;")
     div(style="flex-grow: 1; pointer-events: none;")
     el-menu-item(index="1")
-      router-link(to="/post/edit") New
+      router-link(to="/admin/edit") New
     el-menu-item(index="2")
       span(role="button" @click="load()") Reload
     el-submenu(index="3" :disabled="checked.length === 0")
       template(slot="title") Batch Edit
-      el-menu-item.cursor-pointer(index="3-1" role="button" @click="isEditTagsDialog = true") Edit tags
-      el-menu-item.cursor-pointer(index="3-2" role="button" @click="doDelete") Delete
+      el-menu-item.cursor-pointer(index="3-1" role="button" @click="doDelete") Delete
   el-table(
     :data="items" style="width: 100%"
     :default-sort="sort" sortable="custom" @sort-change="onSort"
     @selection-change="checked = $event"
     @row-click="openItem($event)"
+    :height="tableHeight"
   )
     el-table-column(type="selection" width="50")
+    el-table-column(property="id" label="ID" width="200")
     el-table-column(property="slug" label="Slug" width="200")
     el-table-column(property="title" label="Title" sortable)
-    el-table-column(property="date" label="Date" sortable width="250")
-    el-table-column(property="category" label="Category" sortable width="200")
+    el-table-column(property="created" label="Created" sortable width="250")
     el-table-column(property="tag" label="Tag" width="200")
       template(slot-scope="scope")
         el-tag.tag(v-for="t in scope.row.tag" style="margin-right: 1em;" :key="t" size="small") {{t}}
-  el-pagination(:total="count" :page-size="perPage" :current-page.sync="page")
-  el-dialog(:visible.sync="isEditTagsDialog" title="Edit tags" @close="load()")
-    el-tag.tag(v-for="t in tagList" :key="t" closable
-      @close="removeTag($event)" size="small") {{t}}
-    el-input.input-new-tag(v-model="newTag" v-if="newTagVisible"
-      @keyup.enter.native="submitNewTag" @blur="submitNewTag")
-    el-button.button-new-tag(v-else size="small" @click="newTagVisible = true") + New Tag
-    span(slot="footer")
-      el-button(@click="isEditTagsDialog = false") Close
 </template>
 
 <script lang="ts">
 import { Component, Vue, Watch } from 'vue-property-decorator'
 import dayjs from 'dayjs'
+import firebase from 'firebase/app'
+
+import 'firebase/firestore'
 
 import { normalizeArray, stringSorter } from '../assets/util'
 
 @Component
 export default class Query extends Vue {
   checked: any[] = []
-
   items: any[] = []
-  allTags: string[] | null = null
-  filteredTags: string[] = []
-  tagList: string[] = []
+
+  tableHeight = window.innerHeight - 60
   sort = {
-    prop: 'date',
+    prop: 'created',
     order: 'descending'
   }
 
-  newTagVisible = false
   isLoading = false
-  count = 0
-  isEditTagsDialog = false
-  newTag = ''
-
-  perPage = 5
-
-  get page () {
-    return parseInt(normalizeArray(this.$route.query.page) || '1')
-  }
-
-  set page (p: number) {
-    const { page, ...query } = this.$route.query
-
-    if (p === 1) {
-      this.$router.push({
-        query
-      })
-    } else {
-      this.$router.push({
-        query: {
-          ...query,
-          page: p.toString()
-        }
-      })
-    }
-  }
 
   get q () {
-    return this.$route.query.q || '' as string
+    return normalizeArray(this.$route.query.q) || ''
   }
 
   mounted () {
     this.load()
   }
 
-  @Watch('$route.query.page')
-  @Watch('$route.query.q')
+  @Watch('q')
+  @Watch('sort', { deep: true })
   async load () {
+    this.loadMore()
+  }
+
+  async loadMore (endOfScroll = false) {
     this.$set(this, 'checked', [])
 
-    const r = await api.post('/api/post/', {
-      q: this.q,
-      offset: (this.page - 1) * this.perPage,
-      limit: this.perPage,
-      sort: {
-        key: this.sort.prop,
-        desc: this.sort.order === 'descending'
-      },
-      hasCount: true,
-      projection: {
-        slug: 1,
-        title: 1,
-        tag: 1,
-        category: 1,
-        type: 1,
-        date: 1
+    let cursor = firebase.firestore().collection('reveal') as firebase.firestore.Query<firebase.firestore.DocumentData>
+    this.q.split(' ')
+      .map((el) => el.split(/([:><])(.+)$/))
+      .map((ls) => {
+        const [k, op, v] = ls
+        if (v) {
+          if (k === 'tag') {
+            cursor = cursor.where('tag', 'array-contains', v)
+          } else if (op === ':') {
+            cursor = cursor.where(k, '==', v)
+          } else {
+            cursor = cursor.where(k, op as '>' | '<', v)
+          }
+        }
+      })
+
+    cursor = cursor.orderBy(this.sort.prop, this.sort.order === 'descending' ? 'desc' : 'asc')
+    if (endOfScroll) {
+      const lastItem = this.items[this.items.length - 1]
+      if (lastItem) {
+        cursor = cursor.startAfter(lastItem[this.sort.prop])
       }
+    } else {
+      this.items = []
+      this.$set(this, 'items', this.items)
+    }
+
+    const r = await cursor.limit(10).get()
+    r.docs.map((d) => {
+      const data = d.data()
+      data.id = d.id
+
+      this.items.push(data)
     })
 
-    this.count = r.data.count
-
-    this.$set(this, 'items', r.data.data.map((el: any) => {
-      return {
-        ...el,
-        slug: el.slug || el.id,
-        tag: (el.tag || []).sort(stringSorter),
-        date: el.date ? dayjs(el.date).format('YYYY-MM-DD HH:mm Z') : ''
-      }
-    }))
+    this.$set(this, 'items', this.items)
   }
 
   onSort (evt: { column: string, prop: string, order: string }) {
@@ -139,70 +115,19 @@ export default class Query extends Vue {
       type: 'warning'
     })
       .then(async () => {
-        await api.delete('/api/post/', {
-          data: {
-            q: {
-              _id: { $in: this.checked.map((el) => el.id) }
-            }
-          }
-        })
+        await Promise.all(this.checked.map(({ id }) => {
+          return firebase.firestore().collection('reveal').doc(id).delete()
+        }))
 
         this.load()
       })
   }
 
-  async getFilteredTags (s: string) {
-    if (!this.allTags) {
-      this.allTags = Array.from(new Set((await api.post('/api/post/', {
-        q: {
-          tag: { $exists: true }
-        },
-        limit: null,
-        projection: { tag: 1 }
-      })).data.data
-        .map((el: any) => el.tag)
-        .filter((t: string) => t)
-        .reduce((prev: any, c: any) => [...prev, ...c], [])))
-      this.filteredTags = []
-    } else {
-      this.filteredTags = this.allTags
-        .filter((t) => s.startsWith(t))
-    }
-  }
-
   openItem (data: any) {
     this.$router.push({
-      path: '/post/edit',
+      path: '/admin/edit',
       query: {
         id: data.id
-      }
-    })
-  }
-
-  @Watch('checked')
-  onTableChecked () {
-    this.tagList = Array.from(new Set(this.checked
-      .map((el) => el.tag)
-      .filter((t) => t)
-      .reduce((a, b) => [...a!, ...b!], [])!))
-
-    this.$set(this, 'tagList', this.tagList)
-  }
-
-  async submitNewTag () {
-    if (this.newTag) {
-      await api.patch('/api/post/tag', {
-        ids: this.checked.map((el) => el.id),
-        tags: [this.newTag]
-      })
-    }
-  }
-
-  async removeTag (evt: any) {
-    await api.delete('/api/post/tag', {
-      data: {
-        ids: this.checked.map((el) => el.id),
-        tags: [evt.target.innerText]
       }
     })
   }
@@ -210,32 +135,7 @@ export default class Query extends Vue {
 </script>
 
 <style lang="scss">
-.button-new-tag {
-  height: 24px;
-  line-height: 24px;
-  padding-top: 0;
-  padding-bottom: 0;
-  margin: 0 4px;
-}
-
-.input-new-tag {
-  width: 90px;
-  vertical-align: bottom;
-  margin-bottom: 5px;
-
-  input {
-    height: 24px;
-    line-height: 24px;
-  }
-}
-
 .query-view tr {
   cursor: pointer;
-}
-
-.tag {
-  margin-right: 1em;
-  line-height: 24px;
-  margin-bottom: 5px;
 }
 </style>

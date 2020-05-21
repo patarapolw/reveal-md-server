@@ -40,11 +40,13 @@ export class Matter {
 
   stringify (content: string, header: any) {
     if (header) {
+      const { header: h, content: c } = this.parse(content)
+
       try {
-        return `---\n${yaml.safeDump(header, {
+        return `---\n${yaml.safeDump(Object.assign(header, h), {
           schema: yaml.JSON_SCHEMA,
           skipInvalid: true
-        })}---\n${content}`
+        })}---\n${c}`
       } catch (e) {
         console.error(e)
       }

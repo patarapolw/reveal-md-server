@@ -39,13 +39,25 @@ export class RevealMd {
   ) {
     window.revealMd = this
 
+    const { header, content } = matter.parse(placeholder)
+    this.markdown = content
+
+    const onload = () => {
+      this.headers = header
+      if (currentSlide) {
+        location.hash = currentSlide
+      }
+    }
+
     if (!this.cdn.includes('://')) {
       document.body.appendChild(Object.assign(document.createElement('script'), {
-        src: `${this.cdn}js/reveal.js`
+        src: `${this.cdn}js/reveal.js`,
+        onload
       }))
     } else {
       document.body.appendChild(Object.assign(document.createElement('script'), {
-        src: `${this.cdn}js/reveal.min.js`
+        src: `${this.cdn}js/reveal.min.js`,
+        onload
       }))
     }
 
@@ -61,17 +73,6 @@ export class RevealMd {
       type: 'text/css',
       id: 'reveal-theme'
     }))
-
-    const { header, content } = matter.parse(placeholder)
-
-    this.headers = header
-    this.markdown = content
-
-    this.onReady(() => {
-      if (currentSlide) {
-        location.hash = currentSlide
-      }
-    })
   }
 
   get headers (): RevealOptions & {
@@ -157,7 +158,7 @@ export class RevealMd {
   }
 
   set markdown (s: string) {
-    const newRaw = s.split('\n===\n').map((el, x) => {
+    const newRaw = matter.parse(s).content.split('\n===\n').map((el, x) => {
       return el.split('\n--\n').map((ss, y) => {
         let section = this.getSlide(x)
         let subSection = this.getSlide(x, y)

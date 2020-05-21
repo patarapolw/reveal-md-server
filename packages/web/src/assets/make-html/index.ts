@@ -8,7 +8,6 @@ import { unescapeAll } from 'markdown-it/lib/common/utils'
 import emoji from 'markdown-it-emoji'
 import imsize from 'markdown-it-imsize'
 import mdContainer from 'markdown-it-container'
-import ghHeading from 'markdown-it-github-headings'
 
 import { makeIncremental } from './make-incremental'
 import { liquid } from './template'
@@ -66,12 +65,6 @@ export default class MakeHtml {
           }
         }
       })
-
-    if (opts) {
-      if (opts.ghHeading) {
-        this.md = this.md.use(ghHeading)
-      }
-    }
 
     this.hp = new HyperPug({
       markdown: (s) => this._mdConvert(s),
