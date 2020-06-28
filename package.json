@@ -30,6 +30,7 @@
     "incremental-dom": "^0.7.0",
     "js-yaml": "^3.14.0",
     "nuxt": "^2.13.0",
+    "pino-pretty": "^4.0.0",
     "sanitize-filename": "^1.6.3",
     "sweetalert2": "^9.15.2",
     "vue-codemirror": "^4.0.6",

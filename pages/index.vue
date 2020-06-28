@@ -10,7 +10,7 @@
           {{ hasPreview ? 'Hide' : 'Show' }} Preview
         </button>
 
-        <button :disabled="!title || !isEdited" @click="save" @keypress="save">
+        <button :disabled="!canSave" @click="save" @keypress="save">
           Save
         </button>
       </nav>
@@ -78,6 +78,8 @@ export default class Editor extends Vue {
 
   urlMetadata: Map<string, any> = new Map()
 
+  canSave = true
+
   readonly noTitle = 'Title must not be empty'
   readonly matter = new Matter()
 
@@ -91,10 +93,6 @@ export default class Editor extends Vue {
 
   get codemirror(): CodeMirror.Editor {
     return (this.$refs.codemirror as any).codemirror
-  }
-
-  get canSave() {
-    return this.title && this.isEdited
   }
 
   created() {
@@ -216,6 +214,19 @@ export default class Editor extends Vue {
       return
     }
 
+    if (!process.env.isServer) {
+      Swal.fire({
+        toast: true,
+        timer: 3000,
+        icon: 'warning',
+        text: 'Cannot save in preview mode',
+        position: 'top-end',
+        showConfirmButton: false,
+      })
+
+      return
+    }
+
     await this.$axios.$put('/api/post', { data: this.markdown })
 
     Swal.fire({
@@ -298,5 +309,9 @@ nav.title-nav button + button {
   overflow-y: scroll;
   display: flex;
   flex-direction: column;
+}
+
+.flex-grow {
+  flex-grow: 1;
 }
 </style>

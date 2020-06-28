@@ -10,13 +10,18 @@
 <script lang="ts">
 import { MakeHtml } from '@patarapolw/make-html-frontend-functions'
 import RevealMd from '@patarapolw/reveal-md-core'
+import { Matter } from '@patarapolw/reveal-md-core/dist/matter'
 import { Component, Vue } from 'nuxt-property-decorator'
 
 @Component
 export default class RevealView extends Vue {
+  matter = new Matter()
+
   mounted() {
     const makeHtml = new MakeHtml()
-    new RevealMd((s) => makeHtml.render(s, !!process.env.sanitizeHtml))
+    new RevealMd((s) =>
+      makeHtml.render(this.matter.parse(s).content, !!process.env.sanitizeHtml)
+    )
   }
 }
 </script>

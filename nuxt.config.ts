@@ -2,6 +2,7 @@ import { Configuration } from '@nuxt/types'
 
 export default (): Configuration => {
   return {
+    telemetry: false,
     /*
      ** Nuxt rendering mode
      ** See https://nuxtjs.org/api/configuration-mode
