@@ -4449,7 +4449,7 @@ expand-template@^2.0.3:
   resolved "https://registry.yarnpkg.com/expand-template/-/expand-template-2.0.3.tgz#6e14b3fcee0f3a6340ecb57d2e8918692052a47c"
   integrity sha512-XYfuKMvj4O35f/pOXLObndIRvyQ+/+6AhODh+OKWj9S9498pHHn/IMszH+gt0fBCRWMNfk1ZSp5x3AifmnI2vg==
 
-express-fileupload@^1.1.5:
+express-fileupload@^1.1.6:
   version "1.1.6"
   resolved "https://registry.yarnpkg.com/express-fileupload/-/express-fileupload-1.1.6.tgz#0ac2659ad8c1128c92c8580fd6e15b8b15343db0"
   integrity sha512-w24zPWT8DkoIxSVkbxYPo9hkTiLpCQQzNsLRTCnecBhfbYv+IkIC5uLw2MIUAxBZ+7UMmXPjGxlhzUXo4RcbZw==
@@ -4605,15 +4605,15 @@ fastify-cors@^3.0.3:
     fastify-plugin "^1.6.0"
     vary "^1.1.2"
 
-fastify-file-upload@^2.0.1:
-  version "2.0.1"
-  resolved "https://registry.yarnpkg.com/fastify-file-upload/-/fastify-file-upload-2.0.1.tgz#5620bc500999feff318a886f5ab16ee35890cc64"
-  integrity sha512-y3MPQjvtqNAnuSArQknmRB2zzRacxqSrlhlLIy58DZm08mq0MOencN42X5T8lZkoNPJ6CncBF67S4vrt3/J1bA==
+fastify-file-upload@^2.1.0:
+  version "2.1.0"
+  resolved "https://registry.yarnpkg.com/fastify-file-upload/-/fastify-file-upload-2.1.0.tgz#447ffdd76e003fbb5feeaa8395914666ef65ba79"
+  integrity sha512-xuoST5zq5wUY3afVowkP5MXKKz5ej324KdD4/Rj9g6eeJqe+Bv3sxaHwYA/9JEeIl6csEOhD9uOarzgTvZ4Ofw==
   dependencies:
-    express-fileupload "^1.1.5"
-    fastify-plugin "^1.6.0"
+    express-fileupload "^1.1.6"
+    fastify-plugin "^1.6.1"
 
-fastify-plugin@^1.6.0:
+fastify-plugin@^1.6.0, fastify-plugin@^1.6.1:
   version "1.6.1"
   resolved "https://registry.yarnpkg.com/fastify-plugin/-/fastify-plugin-1.6.1.tgz#122f5a5eeb630d55c301713145a9d188e6d5dd5b"
   integrity sha512-APBcb27s+MjaBIerFirYmBLatoPCgmHZM6XP0K+nDL9k0yX8NJPWDY1RAC3bh6z+AB5ULS2j31BUfLMT3uaZ4A==
