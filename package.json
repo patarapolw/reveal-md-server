@@ -20,7 +20,7 @@
     "@types/js-yaml": "^3.12.5",
     "any-serialize": "^1.4.12",
     "codemirror": "^5.55.0",
-    "dayjs": "^1.8.28",
+    "dayjs": "^1.8.29",
     "fastify": "^2.15.0",
     "fastify-cors": "^3.0.3",
     "fastify-file-upload": "^2.0.1",
