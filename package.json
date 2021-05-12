@@ -19,7 +19,7 @@
     "@types/fs-extra": "^9.0.1",
     "@types/js-yaml": "^3.12.5",
     "any-serialize": "^1.4.12",
-    "codemirror": "^5.55.0",
+    "codemirror": "^5.58.2",
     "dayjs": "^1.8.28",
     "fastify": "^2.15.0",
     "fastify-cors": "^3.0.3",
